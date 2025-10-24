@@ -1,5 +1,6 @@
 package alexander.gimnacio.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
@@ -40,6 +41,7 @@ public class Clase {
     @Column(name = "duracion_minutos")
     private Integer duracionMinutos = 60;
 
+    @JsonIgnore
     @ManyToMany(mappedBy = "clasesInscritas")
     private Set<Usuario> usuariosInscritos = new HashSet<>();
 

@@ -1,4 +1,6 @@
 package alexander.gimnacio.entities;
+
+import com.fasterxml.jackson.annotation.JsonIgnore; // ✅ Importar
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
@@ -21,10 +23,12 @@ public class Pago {
 
     @ManyToOne
     @JoinColumn(name = "usuario_id", nullable = false)
+    @JsonIgnore
     private Usuario usuario;
 
     @ManyToOne
     @JoinColumn(name = "membresia_id", nullable = false)
+    @JsonIgnore
     private Membresia membresia;
 
     @Column(nullable = false)

@@ -3,7 +3,7 @@ package alexander.gimnacio.config;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod; // 👈 importa esto
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -23,8 +23,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ConfigSecurity {
 
-    private final FiltroJwt filtroJwt;             // tu filtro JWT
-    private final PuntoEntradaJwt puntoEntradaJwt; // entrypoint 401
+    private final FiltroJwt filtroJwt;
+    private final PuntoEntradaJwt puntoEntradaJwt;
 
     @Bean
     public SecurityFilterChain cadenaDeFiltrosDeSeguridad(HttpSecurity http) throws Exception {
@@ -38,12 +38,14 @@ public class ConfigSecurity {
 
                         .requestMatchers("/api/autenticacion/**").permitAll()
                         .requestMatchers("/api/ubicaciones/**").permitAll()
-                        .requestMatchers("/api/contacto/**").permitAll()
+                        .requestMatchers("/api/contacto").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/clases").permitAll()
 
                         .requestMatchers("/api/admin/**").hasAuthority("ADMINISTRADOR")
 
                         .requestMatchers("/api/clases/**").authenticated()
+                        .requestMatchers("/api/membresias/**").authenticated()
+                        .requestMatchers("/api/pagos/**").authenticated()
 
                         .anyRequest().authenticated()
                 )
@@ -60,11 +62,18 @@ public class ConfigSecurity {
     @Bean
     public CorsConfigurationSource fuenteConfiguracionCors() {
         CorsConfiguration cfg = new CorsConfiguration();
-        cfg.setAllowedOrigins(List.of("*"));
+
+        // ✅ Opción 1: Permitir cualquier origen (desarrollo)
+        cfg.setAllowedOriginPatterns(List.of("*")); // Usar esto en vez de setAllowedOrigins
+
+        // ✅ Opción 2: Especificar orígenes exactos (producción)
+        // cfg.setAllowedOrigins(List.of("http://localhost:3000", "https://tu-dominio.com"));
+
         cfg.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        cfg.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "Accept"));
-        cfg.setExposedHeaders(Arrays.asList("Authorization"));
-        cfg.setAllowCredentials(false);
+        cfg.setAllowedHeaders(List.of("*")); // Más permisivo
+        cfg.setExposedHeaders(List.of("Authorization"));
+        cfg.setAllowCredentials(false); // ✅ OK con allowedOriginPatterns
+        cfg.setMaxAge(3600L); // Cache preflight por 1 hora
 
         UrlBasedCorsConfigurationSource fuente = new UrlBasedCorsConfigurationSource();
         fuente.registerCorsConfiguration("/**", cfg);

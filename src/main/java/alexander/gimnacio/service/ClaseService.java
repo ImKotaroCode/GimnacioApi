@@ -5,13 +5,10 @@ import alexander.gimnacio.dto.response.*;
 import alexander.gimnacio.entities.*;
 import alexander.gimnacio.repository.*;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
-
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -19,8 +16,25 @@ public class ClaseService {
     private final ClaseRepository repositorioClase;
     private final UsuarioRepository repositorioUsuario;
 
-    public List<Clase> obtenerTodasLasClasesActivas() {
-        return repositorioClase.findByEstaActivoTrue();
+    // ✅ Cambiar retorno a ClaseDTO
+    public List<ClaseDTO> obtenerTodasLasClasesActivas() {
+        return repositorioClase.findByEstaActivoTrue().stream()
+                .map(this::convertirAClaseDTO) // ✅ Usar método helper
+                .collect(Collectors.toList());
+    }
+
+    private ClaseDTO convertirAClaseDTO(Clase clase) {
+        return ClaseDTO.builder()
+                .id(clase.getId())
+                .nombreClase(clase.getNombreClase())
+                .descripcion(clase.getDescripcion())
+                .horario(clase.getHorario())
+                .nombreInstructor(clase.getNombreInstructor())
+                .capacidadMaxima(clase.getCapacidadMaxima())
+                .duracionMinutos(clase.getDuracionMinutos())
+                .usuariosInscritos(clase.getUsuariosInscritos() != null ? clase.getUsuariosInscritos().size() : 0)
+                .estaActivo(clase.isEstaActivo())
+                .build();
     }
 
     @Transactional
@@ -39,10 +53,7 @@ public class ClaseService {
             throw new RuntimeException("Clase llena");
         }
 
-        clase.getUsuariosInscritos().add(usuario);
         usuario.getClasesInscritas().add(clase);
-
-        repositorioClase.save(clase);
         repositorioUsuario.save(usuario);
 
         return "Inscripción exitosa a " + clase.getNombreClase();
@@ -55,4 +66,3 @@ public class ClaseService {
         return new ArrayList<>(usuario.getClasesInscritas());
     }
 }
-

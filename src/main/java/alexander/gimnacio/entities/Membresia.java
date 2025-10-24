@@ -1,10 +1,11 @@
 package alexander.gimnacio.entities;
+
+import com.fasterxml.jackson.annotation.JsonIgnore; // ✅ Importar
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import java.time.LocalDateTime;
-
 
 @Entity
 @Table(name = "membresias")
@@ -19,6 +20,7 @@ public class Membresia {
 
     @OneToOne
     @JoinColumn(name = "usuario_id", unique = true)
+    @JsonIgnore
     private Usuario usuario;
 
     @Enumerated(EnumType.STRING)
