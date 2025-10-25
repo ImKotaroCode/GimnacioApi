@@ -1,4 +1,3 @@
-// Nuevo DTO MUY simple para la petición:
 package alexander.gimnacio.dto.request;
 import alexander.gimnacio.entities.Membresia;
 import lombok.Data;

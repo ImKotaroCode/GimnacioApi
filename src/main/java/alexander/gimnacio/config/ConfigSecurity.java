@@ -63,17 +63,17 @@ public class ConfigSecurity {
     public CorsConfigurationSource fuenteConfiguracionCors() {
         CorsConfiguration cfg = new CorsConfiguration();
 
-        // ✅ Opción 1: Permitir cualquier origen (desarrollo)
-        cfg.setAllowedOriginPatterns(List.of("*")); // Usar esto en vez de setAllowedOrigins
+        // Producción: orígenes explícitos
+        cfg.setAllowedOrigins(List.of(
+                "https://sistema-gimnacio.vercel.app",
+                "http://localhost:5173"
+        ));
 
-        // ✅ Opción 2: Especificar orígenes exactos (producción)
-        // cfg.setAllowedOrigins(List.of("http://localhost:3000", "https://tu-dominio.com"));
-
-        cfg.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        cfg.setAllowedHeaders(List.of("*")); // Más permisivo
-        cfg.setExposedHeaders(List.of("Authorization"));
-        cfg.setAllowCredentials(false); // ✅ OK con allowedOriginPatterns
-        cfg.setMaxAge(3600L); // Cache preflight por 1 hora
+        cfg.setAllowedMethods(List.of("GET","POST","PUT","DELETE","PATCH","OPTIONS","HEAD"));
+        cfg.setAllowedHeaders(List.of("Authorization","Content-Type","X-Requested-With"));
+        cfg.setExposedHeaders(List.of("Authorization","Location"));
+        cfg.setAllowCredentials(false);
+        cfg.setMaxAge(3600L);
 
         UrlBasedCorsConfigurationSource fuente = new UrlBasedCorsConfigurationSource();
         fuente.registerCorsConfiguration("/**", cfg);
