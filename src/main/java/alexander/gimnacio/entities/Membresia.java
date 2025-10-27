@@ -9,9 +9,9 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "membresias")
-@Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter @Setter
 @Builder
 public class Membresia {
     @Id

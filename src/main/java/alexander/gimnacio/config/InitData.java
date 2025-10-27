@@ -28,11 +28,11 @@ public class InitData implements CommandLineRunner {
         if (repositorioUbicacion.count() == 0) {
             repositorioUbicacion.saveAll(Arrays.asList(
                     Ubicacion.builder()
-                            .nombreUbicacion("FitZone Miraflores")
-                            .direccion("Av. Larco 1234, Miraflores")
-                            .distrito("Miraflores")
+                            .nombreUbicacion("SmartFit La Molina")
+                            .direccion("Av. Javier Prado Este 6210, La Molina - La Molina")
+                            .distrito("La Molina")
                             .ciudad("Lima")
-                            .numeroTelefono("+51 999 111 222")
+                            .numeroTelefono("+51 999 999 999")
                             .horario("24/7")
                             .latitud(-12.1196)
                             .longitud(-77.0365)
@@ -40,9 +40,9 @@ public class InitData implements CommandLineRunner {
                             .build(),
 
                     Ubicacion.builder()
-                            .nombreUbicacion("FitZone San Isidro")
-                            .direccion("Av. Conquistadores 567, San Isidro")
-                            .distrito("San Isidro")
+                            .nombreUbicacion("SmartFit Puruchuco")
+                            .direccion("Av. Nicolás Ayllón 4770, Ate - Lima, Lima - 15494")
+                            .distrito("Ate")
                             .ciudad("Lima")
                             .numeroTelefono("+51 999 333 444")
                             .horario("24/7")
@@ -52,9 +52,9 @@ public class InitData implements CommandLineRunner {
                             .build(),
 
                     Ubicacion.builder()
-                            .nombreUbicacion("FitZone Surco")
-                            .direccion("Av. Primavera 890, Surco")
-                            .distrito("Surco")
+                            .nombreUbicacion("SmartFit Santa Anita")
+                            .direccion("Av. Carretera Central 111 Int. GM01 (Mall Aventura Santa Anita) Lima, Santa Anita - Lima, Lima - 15008")
+                            .distrito("Santa Anita")
                             .ciudad("Lima")
                             .numeroTelefono("+51 999 555 666")
                             .horario("24/7")
@@ -64,9 +64,9 @@ public class InitData implements CommandLineRunner {
                             .build(),
 
                     Ubicacion.builder()
-                            .nombreUbicacion("FitZone La Molina")
-                            .direccion("Av. Javier Prado 2345, La Molina")
-                            .distrito("La Molina")
+                            .nombreUbicacion("FitZone Surco")
+                            .direccion("Av. Javier Prado Este 4200, Santiago de Surco - Lima, Lima - 15023")
+                            .distrito("Surco")
                             .ciudad("Lima")
                             .numeroTelefono("+51 999 777 888")
                             .horario("24/7")
@@ -147,11 +147,11 @@ public class InitData implements CommandLineRunner {
     private void inicializarUsuarioPrueba() {
         if (repositorioUsuario.count() == 0) {
             Usuario usuarioPrueba = Usuario.builder()
-                    .nombreCompleto("Usuario Prueba")
-                    .correoElectronico("prueba@fitzone.com")
-                    .contrasena(codificadorContrasena.encode("password123"))
-                    .numeroTelefono("+51999123456")
-                    .rol(Usuario.Rol.USUARIO)
+                    .nombreCompleto("Alexander Ferrua")
+                    .correoElectronico("alexferruarua564@gmail.com")
+                    .contrasena(codificadorContrasena.encode("123456"))
+                    .numeroTelefono("+51902487635")
+                    .rol(Usuario.Rol.ADMINISTRADOR)
                     .estaActivo(true)
                     .build();
 

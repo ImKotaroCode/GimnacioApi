@@ -63,15 +63,11 @@ public class ConfigSecurity {
     public CorsConfigurationSource fuenteConfiguracionCors() {
         CorsConfiguration cfg = new CorsConfiguration();
 
-        // Producción: orígenes explícitos
-        cfg.setAllowedOrigins(List.of(
-                "https://sistema-gimnacio.vercel.app",
-                "http://localhost:5173"
-        ));
+        cfg.setAllowedOriginPatterns(List.of("*"));
 
-        cfg.setAllowedMethods(List.of("GET","POST","PUT","DELETE","PATCH","OPTIONS","HEAD"));
-        cfg.setAllowedHeaders(List.of("Authorization","Content-Type","X-Requested-With"));
-        cfg.setExposedHeaders(List.of("Authorization","Location"));
+        cfg.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        cfg.setAllowedHeaders(List.of("*"));
+        cfg.setExposedHeaders(List.of("Authorization"));
         cfg.setAllowCredentials(false);
         cfg.setMaxAge(3600L);
 
