@@ -62,7 +62,6 @@ public class MembresiaService {
         return mapearRespuesta(m);
     }
 
-    // --- helpers ---
 
     private double precioPorPlan(Membresia.TipoPlan plan) {
         return switch (plan) {

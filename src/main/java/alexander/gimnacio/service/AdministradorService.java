@@ -4,10 +4,13 @@ import alexander.gimnacio.dto.request.ActualizarUsuarioRequest;
 import alexander.gimnacio.dto.request.CrearClaseRequest;
 import alexander.gimnacio.dto.request.CrearUbicacionRequest;
 
+import alexander.gimnacio.dto.request.CrearUsuarioAdminRequest;
 import alexander.gimnacio.dto.response.EstadisticasDashboard;
 import alexander.gimnacio.dto.response.ReporteIngresos;
 import alexander.gimnacio.dto.response.ReporteMembresias;
 import alexander.gimnacio.dto.response.ReporteClases;
+
+import java.util.LinkedHashMap;
 
 import alexander.gimnacio.dto.response.*;
 
@@ -24,6 +27,7 @@ import alexander.gimnacio.repository.UbicacionRepository;
 import alexander.gimnacio.repository.UsuarioRepository;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,6 +46,7 @@ public class AdministradorService {
     private final ClaseRepository rC;
     private final UbicacionRepository rUb;
     private final PagoRepository rP;
+    private final PasswordEncoder codificadorContrasena;
 
 
     public EstadisticasDashboard obtenerEstadisticasDashboard() {
@@ -321,4 +326,47 @@ public class AdministradorService {
         dto.setEstadoPago(p.getEstadoPago() != null ? p.getEstadoPago().name() : null);
         return dto;
     }
+
+    @Transactional
+    public UsuarioAdminDTO crearUsuarioAdmin(CrearUsuarioAdminRequest r){
+        rU.findByCorreoElectronico(r.getCorreoElectronico())
+                .ifPresent(u -> { throw new IllegalArgumentException("El correo ya está registrado"); });
+
+        var u = new Usuario();
+        u.setNombreCompleto(r.getNombreCompleto());
+        u.setCorreoElectronico(r.getCorreoElectronico());
+        u.setNumeroTelefono(r.getNumeroTelefono());
+        u.setRol(Usuario.Rol.valueOf(r.getRol()));
+        u.setEstaActivo(r.getEstaActivo() == null ? true : r.getEstaActivo());
+
+        String raw = (r.getContrasena() == null || r.getContrasena().isBlank()) ? "123456" : r.getContrasena();
+        u.setContrasena(codificadorContrasena.encode(raw));
+
+        var guardado = rU.save(u);
+
+        return toUsuarioAdminDTO(guardado);
+    }
+    @Transactional(readOnly = true)
+    public Map<String, Long> obtenerSuscripcionesMensuales() {
+        var todas = rM.findAll();
+        var formatoMes = java.time.format.DateTimeFormatter.ofPattern("yyyy-MM");
+
+        // Agrupar por año-mes de fechaInicio
+        Map<String, Long> porMes = todas.stream()
+                .filter(m -> m.getFechaInicio() != null)
+                .collect(Collectors.groupingBy(
+                        m -> m.getFechaInicio().format(formatoMes),
+                        Collectors.counting()
+                ));
+
+        return porMes.entrySet().stream()
+                .sorted(Map.Entry.comparingByKey())
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        Map.Entry::getValue,
+                        (a, b) -> a,
+                        LinkedHashMap::new
+                ));
+    }
+
 }
