@@ -39,6 +39,7 @@ public class ConfigSecurity {
                         .requestMatchers("/api/autenticacion/**").permitAll()
                         .requestMatchers("/api/ubicaciones/**").permitAll()
                         .requestMatchers("/api/contacto").permitAll()
+                        .requestMatchers("/api/pagos/stripe/webhook").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/clases").permitAll()
 
                         .requestMatchers("/api/admin/**").hasAuthority("ADMINISTRADOR")

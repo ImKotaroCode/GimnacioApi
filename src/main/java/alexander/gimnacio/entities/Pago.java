@@ -1,6 +1,6 @@
 package alexander.gimnacio.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore; // ✅ Importar
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
@@ -53,7 +53,7 @@ public class Pago {
     private LocalDateTime fechaPago;
 
     public enum MetodoPago {
-        TARJETA_CREDITO, TARJETA_DEBITO, PAYPAL, TRANSFERENCIA_BANCARIA
+        TARJETA_CREDITO, TARJETA_DEBITO, PAYPAL, TRANSFERENCIA_BANCARIA, Stripe
     }
 
     public enum EstadoPago {

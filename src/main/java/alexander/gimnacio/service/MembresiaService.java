@@ -62,6 +62,33 @@ public class MembresiaService {
         return mapearRespuesta(m);
     }
 
+    /**
+     * Usado por el webhook de Stripe para activar/renovar una membresía
+     * cuando el pago fue exitoso.
+     */
+    @Transactional
+    public void activarMembresiaDesdeStripe(Usuario usuario, Membresia.TipoPlan plan) {
+        var opcional = repositorioMembresia.findByUsuarioId(usuario.getId());
+
+        Membresia m = opcional.orElseGet(Membresia::new);
+        m.setUsuario(usuario);
+        m.setTipoPlan(plan);
+        m.setPrecio(precioPorPlan(plan));
+
+        LocalDateTime ahora = LocalDateTime.now();
+        LocalDateTime fin = (plan == Membresia.TipoPlan.ANUAL) ? ahora.plusYears(1) : ahora.plusMonths(1);
+
+        m.setFechaInicio(ahora);
+        m.setFechaFin(fin);
+        m.setEstado(Membresia.Estado.ACTIVO);
+        m.setRenovacionAutomatica(true);
+
+        repositorioMembresia.save(m);
+
+        // sincronizar con la entidad usuario (por si la guardas ahí también)
+        usuario.setMembresia(m);
+        repositorioUsuario.save(usuario);
+    }
 
     private double precioPorPlan(Membresia.TipoPlan plan) {
         return switch (plan) {

@@ -34,8 +34,8 @@ public class InitData implements CommandLineRunner {
                             .ciudad("Lima")
                             .numeroTelefono("+51 999 999 999")
                             .horario("24/7")
-                            .latitud(-12.1196)
-                            .longitud(-77.0365)
+                            .latitud(-12.07052)
+                            .longitud(-76.95275)
                             .estaActivo(true)
                             .build(),
 
@@ -46,8 +46,8 @@ public class InitData implements CommandLineRunner {
                             .ciudad("Lima")
                             .numeroTelefono("+51 999 333 444")
                             .horario("24/7")
-                            .latitud(-12.0931)
-                            .longitud(-77.0465)
+                            .latitud(-12.04139)
+                            .longitud(-76.93185)
                             .estaActivo(true)
                             .build(),
 
@@ -58,8 +58,8 @@ public class InitData implements CommandLineRunner {
                             .ciudad("Lima")
                             .numeroTelefono("+51 999 555 666")
                             .horario("24/7")
-                            .latitud(-12.1431)
-                            .longitud(-76.9965)
+                            .latitud(-12.05706)
+                            .longitud(-76.97129)
                             .estaActivo(true)
                             .build(),
 
@@ -70,8 +70,8 @@ public class InitData implements CommandLineRunner {
                             .ciudad("Lima")
                             .numeroTelefono("+51 999 777 888")
                             .horario("24/7")
-                            .latitud(-12.0731)
-                            .longitud(-76.9565)
+                            .latitud(-12.088887)
+                            .longitud(-77.00583)
                             .estaActivo(true)
                             .build()
             ));
