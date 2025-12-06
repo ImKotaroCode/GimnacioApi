@@ -191,6 +191,8 @@ public class AdministradorService {
 
     @Transactional
     public Clase crearClase(CrearClaseRequest r) {
+        boolean activo = (r.getEstaActivo() == null) ? true : r.getEstaActivo();
+
         var c = Clase.builder()
                 .nombreClase(r.getNombreClase())
                 .descripcion(r.getDescripcion())
@@ -198,7 +200,7 @@ public class AdministradorService {
                 .nombreInstructor(r.getNombreInstructor())
                 .capacidadMaxima(r.getCapacidadMaxima())
                 .duracionMinutos(r.getDuracionMinutos())
-                .estaActivo(true)
+                .estaActivo(activo)
                 .build();
         return rC.save(c);
     }
@@ -206,12 +208,18 @@ public class AdministradorService {
     @Transactional
     public Clase actualizarClase(Long id, CrearClaseRequest r) {
         var c = rC.findById(id).orElseThrow(() -> new RuntimeException("Clase no encontrada"));
+
         c.setNombreClase(r.getNombreClase());
         c.setDescripcion(r.getDescripcion());
         c.setHorario(r.getHorario());
         c.setNombreInstructor(r.getNombreInstructor());
         c.setCapacidadMaxima(r.getCapacidadMaxima());
         c.setDuracionMinutos(r.getDuracionMinutos());
+
+        if (r.getEstaActivo() != null) {
+            c.setEstaActivo(r.getEstaActivo());
+        }
+
         return rC.save(c);
     }
 
@@ -351,7 +359,6 @@ public class AdministradorService {
         var todas = rM.findAll();
         var formatoMes = java.time.format.DateTimeFormatter.ofPattern("yyyy-MM");
 
-        // Agrupar por año-mes de fechaInicio
         Map<String, Long> porMes = todas.stream()
                 .filter(m -> m.getFechaInicio() != null)
                 .collect(Collectors.groupingBy(

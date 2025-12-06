@@ -21,6 +21,12 @@ public class ClaseService {
                 .map(this::convertirAClaseDTO)
                 .collect(Collectors.toList());
     }
+    public List<ClaseDTO> obtenerClasesParaAdmin() {
+        return repositorioClase.findAll().stream()
+                .map(this::convertirAClaseDTO)
+                .collect(Collectors.toList());
+    }
+
 
     private ClaseDTO convertirAClaseDTO(Clase clase) {
         return ClaseDTO.builder()

@@ -44,7 +44,6 @@ public class UsuarioController {
         if(!u.getCorreoElectronico().equalsIgnoreCase(auth.getName()))
             return ResponseEntity.status(403).body(Map.of("mensaje","No autorizado"));
 
-        // Espera { "actual": "...", "nueva": "..." }
         String actual = body.getOrDefault("actual","");
         String nueva  = body.getOrDefault("nueva","");
 
@@ -65,7 +64,6 @@ public class UsuarioController {
         if(!u.getCorreoElectronico().equalsIgnoreCase(auth.getName()))
             return ResponseEntity.status(403).build();
 
-        // TODO: sustituir por lectura real si tienes entidad/JSON en BD
         return ResponseEntity.ok(Map.of("emailNotificaciones", true, "tema", "oscuro"));
     }
 
@@ -77,7 +75,6 @@ public class UsuarioController {
         if(!u.getCorreoElectronico().equalsIgnoreCase(auth.getName()))
             return ResponseEntity.status(403).build();
 
-        // TODO: persistir en BD si corresponde (entidad Preferencias o columna JSON)
         return ResponseEntity.ok(Map.of("mensaje","Preferencias guardadas"));
     }
 }

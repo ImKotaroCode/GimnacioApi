@@ -38,7 +38,7 @@ public class ClaseController {
             @PathVariable Long claseId,
             @RequestBody(required = false) Map<String, Object> body
     ) {
-        System.out.println("🟠 Body recibido: " + body);
+        System.out.println("Body recibido: " + body);
 
         if (body == null || !body.containsKey("usuarioId")) {
             return ResponseEntity.badRequest().body(Map.of(

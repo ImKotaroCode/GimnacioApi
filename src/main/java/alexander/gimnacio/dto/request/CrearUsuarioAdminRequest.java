@@ -11,13 +11,12 @@ public class CrearUsuarioAdminRequest {
     @Email @NotBlank
     private String correoElectronico;
 
-    // opcional: si viene vacío, pones una por defecto
     private String contrasena;
 
-    private String numeroTelefono; // opcional
+    private String numeroTelefono;
 
     @NotBlank
-    private String rol; // "USUARIO" | "ADMINISTRADOR" | "ENTRENADOR"
+    private String rol;
 
-    private Boolean estaActivo; // opcional (default true)
+    private Boolean estaActivo;
 }

@@ -17,6 +17,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,8 +36,11 @@ public class PagoController {
     private final MembresiaService membresiaService;
     private final UsuarioRepository usuarioRepository;
 
-    private static final String STRIPE_SECRET_KEY = "sk_test_51SMeZBPSvkDPHeMD2oqq8OzzrdtKI2bqxxcQNLXGsutL62dTaL7BqL5gUxGteXLyMmL0e4cUsPKiLG3w1IGsR77u00B61I0U6k";
-    private static final String STRIPE_WEBHOOK_SECRET = "whsec_ef54fb71737c518b4d63af2f16e72817724b42290b96df8013a7139054f3731b";
+    @Value("${stripe.secret.key}")
+    private String STRIPE_SECRET_KEY;
+
+    @Value("${stripe.webhook.secret}")
+    private String STRIPE_WEBHOOK_SECRET;
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -73,7 +77,7 @@ public class PagoController {
     @PostMapping("/stripe/checkout")
     public ResponseEntity<Map<String, Object>> crearCheckout(@RequestBody Map<String, Object> body) {
         String priceId = (String) body.get("priceId");
-        String plan = (String) body.get("plan"); // BASICO | PREMIUM | ANUAL
+        String plan = (String) body.get("plan");
         Long usuarioId = body.get("usuarioId") != null ? Long.valueOf(body.get("usuarioId").toString()) : null;
 
         if (priceId == null || plan == null || usuarioId == null) {
@@ -85,8 +89,8 @@ public class PagoController {
 
             var params = new com.stripe.param.checkout.SessionCreateParams.Builder()
                     .setMode(com.stripe.param.checkout.SessionCreateParams.Mode.SUBSCRIPTION)
-                    .setSuccessUrl("http://127.0.0.1:3000/index.html?checkout=success")
-                    .setCancelUrl("http://127.0.0.1:3000/index.html?checkout=cancel")
+                    .setSuccessUrl("http://127.0.0.1:3000/html/index.html?checkout=success")
+                    .setCancelUrl("http://127.0.0.1:3000/html/index.html?checkout=cancel")
                     .addLineItem(
                             com.stripe.param.checkout.SessionCreateParams.LineItem.builder()
                                     .setPrice(priceId)
@@ -191,6 +195,6 @@ public class PagoController {
                 "STRIPE"
         );
 
-        log.info("✅ Pago y membresía registrados para usuario {}", usuarioId);
+        log.info("Pago y membresía registrados para usuario {}", usuarioId);
     }
 }

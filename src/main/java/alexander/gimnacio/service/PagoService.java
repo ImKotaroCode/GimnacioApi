@@ -67,7 +67,6 @@ public class PagoService {
         return repositorioPago.findByUsuarioId(usuarioId);
     }
 
-    // ====== NUEVO: registrar pago proveniente de Stripe ======
     @Transactional
     public void registrarPagoStripe(
             Usuario usuario,
@@ -80,7 +79,6 @@ public class PagoService {
             throw new IllegalArgumentException("Usuario es requerido para registrar el pago de Stripe");
         }
 
-        // Si no vino la membresía, intenta buscar la del usuario
         if (membresia == null) {
             membresia = repositorioMembresia.findByUsuarioId(usuario.getId())
                     .orElseThrow(() -> new IllegalArgumentException("El usuario no tiene membresía para asociar al pago"));
@@ -90,7 +88,7 @@ public class PagoService {
                 .usuario(usuario)
                 .membresia(membresia)
                 .monto(monto)
-                .metodoPago(Pago.MetodoPago.TARJETA_CREDITO) // o podrías crear TARJETA_STRIPE si quieres
+                .metodoPago(Pago.MetodoPago.TARJETA_CREDITO)
                 .estadoPago(Pago.EstadoPago.COMPLETADO)
                 .idTransaccion(idTransaccionStripe)
                 .build();
