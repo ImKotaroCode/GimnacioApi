@@ -25,7 +25,11 @@ public class AutenticacionService {
         }
 
         Usuario usuario = Usuario.builder()
-                .nombreCompleto(solicitud.getNombreCompleto())
+                .nombres(solicitud.getNombres())
+                .apellidoPaterno(solicitud.getApellidoPaterno())
+                .apellidoMaterno(solicitud.getApellidoMaterno())
+                .dni(solicitud.getDni())
+                .direccion(solicitud.getDireccion())
                 .correoElectronico(solicitud.getCorreoElectronico())
                 .contrasena(codificadorContrasena.encode(solicitud.getContrasena()))
                 .numeroTelefono(solicitud.getNumeroTelefono())
@@ -40,10 +44,12 @@ public class AutenticacionService {
                 .token(token)
                 .usuarioId(usuarioGuardado.getId())
                 .correoElectronico(usuarioGuardado.getCorreoElectronico())
-                .nombreCompleto(usuarioGuardado.getNombreCompleto())
+                .nombreCompleto(usuarioGuardado.getNombreCompleto()) // ahora se arma con nombres+apellidos
                 .rol(usuarioGuardado.getRol().name())
                 .build();
     }
+
+
 
     public RespuestaAutenticacion iniciarSesion(SolicitudInicioSesion solicitud) {
         Usuario usuario = repositorioUsuario.findByCorreoElectronico(solicitud.getCorreoElectronico())

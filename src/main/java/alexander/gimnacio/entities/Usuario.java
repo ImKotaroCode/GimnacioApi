@@ -1,13 +1,15 @@
 package alexander.gimnacio.entities;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -26,8 +28,32 @@ public class Usuario {
     private Long id;
 
     @NotBlank
-    @Column(name = "nombre_completo", nullable = false)
-    private String nombreCompleto;
+    @Column(name = "nombres", nullable = false)
+    private String nombres;
+
+    @NotBlank
+    @Column(name = "apellido_paterno", nullable = false)
+    private String apellidoPaterno;
+
+    @NotBlank
+    @Column(name = "apellido_materno", nullable = false)
+    private String apellidoMaterno;
+
+    @NotBlank
+    @Column(name = "dni", nullable = false, unique = true, length = 8)
+    private String dni;
+
+    @NotBlank
+    @Column(name = "direccion", nullable = false)
+    private String direccion;
+
+    @Transient
+    public String getNombreCompleto() {
+        String n = (nombres == null) ? "" : nombres.trim();
+        String ap = (apellidoPaterno == null) ? "" : apellidoPaterno.trim();
+        String am = (apellidoMaterno == null) ? "" : apellidoMaterno.trim();
+        return (n + " " + ap + " " + am).trim();
+    }
 
     @Email
     @NotBlank

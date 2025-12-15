@@ -1,15 +1,29 @@
 package alexander.gimnacio.dto.request;
 
-import lombok.*;
 import jakarta.validation.constraints.*;
+import lombok.*;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class SolicitudRegistro {
-    @NotBlank(message = "El nombre completo es requerido")
-    private String nombreCompleto;
+
+    @NotBlank(message = "Los nombres son requeridos")
+    private String nombres;
+
+    @NotBlank(message = "Apellido paterno requerido")
+    private String apellidoPaterno;
+
+    @NotBlank(message = "Apellido materno requerido")
+    private String apellidoMaterno;
+
+    @NotBlank(message = "DNI requerido")
+    @Pattern(regexp = "^\\d{8}$", message = "DNI inválido (8 dígitos)")
+    private String dni;
+
+    @NotBlank(message = "Dirección requerida")
+    private String direccion;
 
     @Email(message = "Formato de correo inválido")
     @NotBlank(message = "El correo es requerido")

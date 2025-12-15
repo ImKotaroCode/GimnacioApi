@@ -1,7 +1,9 @@
 package alexander.gimnacio.controller;
 
+import alexander.gimnacio.dto.request.ActualizarUsuarioRequest;
 import alexander.gimnacio.dto.response.UsuarioAdminDTO;
 import alexander.gimnacio.repository.UsuarioRepository;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -21,13 +23,20 @@ public class UsuarioController {
 
     @GetMapping("/me")
     public ResponseEntity<UsuarioAdminDTO> me(Authentication auth) {
-        // auth.getName() = correo
         var u = usuarioRepo.findByCorreoElectronico(auth.getName())
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
         UsuarioAdminDTO dto = new UsuarioAdminDTO();
         dto.setId(u.getId());
+
+        dto.setNombres(u.getNombres());
+        dto.setApellidoPaterno(u.getApellidoPaterno());
+        dto.setApellidoMaterno(u.getApellidoMaterno());
+        dto.setDni(u.getDni());
+        dto.setDireccion(u.getDireccion());
+
         dto.setNombreCompleto(u.getNombreCompleto());
+
         dto.setCorreoElectronico(u.getCorreoElectronico());
         dto.setNumeroTelefono(u.getNumeroTelefono());
         dto.setRol(u.getRol() != null ? u.getRol().name() : "USUARIO");
@@ -36,10 +45,42 @@ public class UsuarioController {
         return ResponseEntity.ok(dto);
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<?> actualizarPerfil(
+            @PathVariable Long id,
+            @Valid @RequestBody ActualizarUsuarioRequest body,
+            Authentication auth
+    ) {
+        var u = usuarioRepo.findById(id).orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        if (!u.getCorreoElectronico().equalsIgnoreCase(auth.getName())) {
+            return ResponseEntity.status(403).body(Map.of("mensaje", "No autorizado"));
+        }
+
+
+        if (body.getNombres() != null) u.setNombres(body.getNombres().trim());
+        if (body.getApellidoPaterno() != null) u.setApellidoPaterno(body.getApellidoPaterno().trim());
+        if (body.getApellidoMaterno() != null) u.setApellidoMaterno(body.getApellidoMaterno().trim());
+
+        if (body.getNumeroTelefono() != null) u.setNumeroTelefono(body.getNumeroTelefono().trim());
+
+        if (body.getDireccion() != null) u.setDireccion(body.getDireccion().trim());
+
+        if (body.getDni() != null) u.setDni(body.getDni().trim());
+
+
+
+        usuarioRepo.save(u);
+
+        return ResponseEntity.ok(Map.of("mensaje", "Perfil actualizado"));
+    }
+
     @PutMapping("/{id}/contrasena")
-    public ResponseEntity<Map<String,String>> cambiarPwd(@PathVariable Long id,
-                                                         @RequestBody Map<String,String> body,
-                                                         Authentication auth){
+    public ResponseEntity<Map<String,String>> cambiarPwd(
+            @PathVariable Long id,
+            @RequestBody Map<String,String> body,
+            Authentication auth
+    ){
         var u = usuarioRepo.findById(id).orElseThrow(() -> new RuntimeException("No existe"));
         if(!u.getCorreoElectronico().equalsIgnoreCase(auth.getName()))
             return ResponseEntity.status(403).body(Map.of("mensaje","No autorizado"));
@@ -64,13 +105,15 @@ public class UsuarioController {
         if(!u.getCorreoElectronico().equalsIgnoreCase(auth.getName()))
             return ResponseEntity.status(403).build();
 
-        return ResponseEntity.ok(Map.of("emailNotificaciones", true, "tema", "oscuro"));
+        return ResponseEntity.ok(Map.of("emailNotificaciones", true, "tema", "oscuro", "recordatorios", "none"));
     }
 
     @PutMapping("/{id}/preferencias")
-    public ResponseEntity<Map<String,String>> putPrefs(@PathVariable Long id,
-                                                       @RequestBody Map<String,Object> prefs,
-                                                       Authentication auth){
+    public ResponseEntity<Map<String,String>> putPrefs(
+            @PathVariable Long id,
+            @RequestBody Map<String,Object> prefs,
+            Authentication auth
+    ){
         var u = usuarioRepo.findById(id).orElseThrow();
         if(!u.getCorreoElectronico().equalsIgnoreCase(auth.getName()))
             return ResponseEntity.status(403).build();

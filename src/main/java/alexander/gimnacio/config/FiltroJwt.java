@@ -52,14 +52,12 @@ public class FiltroJwt extends OncePerRequestFilter {
                     }
                 }
             } catch (ExpiredJwtException e) {
-                // TOKEN EXPIRADO -> devuelve JSON claro para el frontend
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 response.setContentType("application/json;charset=UTF-8");
                 response.getWriter().write("{\"mensaje\":\"TOKEN_EXPIRADO\"}");
                 response.getWriter().flush();
                 return;
             } catch (JwtException e) {
-                // Token inválido por otra razón roles
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 response.setContentType("application/json;charset=UTF-8");
                 response.getWriter().write("{\"mensaje\":\"TOKEN_INVALIDO\"}");

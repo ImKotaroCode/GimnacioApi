@@ -176,12 +176,33 @@ public class AdministradorService {
     @Transactional
     public Usuario actualizarUsuario(Long id, ActualizarUsuarioRequest r) {
         var u = rU.findById(id).orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
-        if (r.getNombreCompleto() != null) u.setNombreCompleto(r.getNombreCompleto());
+
+        if (r.getNombres() != null) u.setNombres(r.getNombres());
+        if (r.getApellidoPaterno() != null) u.setApellidoPaterno(r.getApellidoPaterno());
+        if (r.getApellidoMaterno() != null) u.setApellidoMaterno(r.getApellidoMaterno());
+        if (r.getDni() != null) u.setDni(r.getDni());
+        if (r.getDireccion() != null) u.setDireccion(r.getDireccion());
+
+        if (r.getCorreoElectronico() != null) {
+            String nuevo = r.getCorreoElectronico().trim().toLowerCase();
+            String actual = (u.getCorreoElectronico() == null) ? "" : u.getCorreoElectronico().trim().toLowerCase();
+
+            if (!nuevo.equals(actual)) {
+                if (rU.existsByCorreoElectronico(nuevo)) {
+                    throw new IllegalArgumentException("El correo ya está en uso");
+                }
+                u.setCorreoElectronico(nuevo);
+            }
+        }
+
         if (r.getNumeroTelefono() != null) u.setNumeroTelefono(r.getNumeroTelefono());
         if (r.getRol() != null) u.setRol(Usuario.Rol.valueOf(r.getRol()));
         if (r.getEstaActivo() != null) u.setEstaActivo(r.getEstaActivo());
+
         return rU.save(u);
     }
+
+
 
     @Transactional
     public void eliminarUsuario(Long id) {
@@ -288,17 +309,22 @@ public class AdministradorService {
     }
 
     private UsuarioAdminDTO toUsuarioAdminDTO(Usuario u) {
-
-        UsuarioAdminDTO dto = new UsuarioAdminDTO();
-        dto.setId(u.getId());
-        dto.setNombreCompleto(u.getNombreCompleto());
-        dto.setCorreoElectronico(u.getCorreoElectronico());
-        dto.setNumeroTelefono(u.getNumeroTelefono());
-        dto.setRol(u.getRol() != null ? u.getRol().name() : "USUARIO");
-        dto.setEstaActivo(u.isEstaActivo());
-        dto.setFechaCreacion(u.getFechaCreacion());
-        return dto;
+        return UsuarioAdminDTO.builder()
+                .id(u.getId())
+                .nombres(u.getNombres())
+                .apellidoPaterno(u.getApellidoPaterno())
+                .apellidoMaterno(u.getApellidoMaterno())
+                .dni(u.getDni())
+                .direccion(u.getDireccion())
+                .nombreCompleto(u.getNombreCompleto())
+                .correoElectronico(u.getCorreoElectronico())
+                .numeroTelefono(u.getNumeroTelefono())
+                .rol(u.getRol() != null ? u.getRol().name() : "USUARIO")
+                .estaActivo(u.isEstaActivo())
+                .fechaCreacion(u.getFechaCreacion())
+                .build();
     }
+
 
     private MembresiaAdminDTO toMembresiaAdminDTO(Membresia m) {
         Long usuarioId      = (m.getUsuario() != null) ? m.getUsuario().getId() : null;
@@ -341,7 +367,12 @@ public class AdministradorService {
                 .ifPresent(u -> { throw new IllegalArgumentException("El correo ya está registrado"); });
 
         var u = new Usuario();
-        u.setNombreCompleto(r.getNombreCompleto());
+        u.setNombres(r.getNombres());
+        u.setApellidoPaterno(r.getApellidoPaterno());
+        u.setApellidoMaterno(r.getApellidoMaterno());
+        u.setDni(r.getDni());
+        u.setDireccion(r.getDireccion());
+
         u.setCorreoElectronico(r.getCorreoElectronico());
         u.setNumeroTelefono(r.getNumeroTelefono());
         u.setRol(Usuario.Rol.valueOf(r.getRol()));
@@ -351,9 +382,10 @@ public class AdministradorService {
         u.setContrasena(codificadorContrasena.encode(raw));
 
         var guardado = rU.save(u);
-
         return toUsuarioAdminDTO(guardado);
     }
+
+
     @Transactional(readOnly = true)
     public Map<String, Long> obtenerSuscripcionesMensuales() {
         var todas = rM.findAll();

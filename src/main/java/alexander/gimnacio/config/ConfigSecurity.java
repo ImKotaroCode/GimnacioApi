@@ -42,6 +42,8 @@ public class ConfigSecurity {
                         .requestMatchers("/api/pagos/stripe/webhook").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/clases").permitAll()
 
+                        .requestMatchers("/api/admin/clases/**")
+                        .hasAnyAuthority("ADMINISTRADOR", "ENTRENADOR")
                         .requestMatchers("/api/admin/**").hasAuthority("ADMINISTRADOR")
 
                         .requestMatchers("/api/clases/**").authenticated()

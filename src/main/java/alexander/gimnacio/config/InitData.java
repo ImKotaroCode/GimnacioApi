@@ -64,7 +64,7 @@ public class InitData implements CommandLineRunner {
                             .build(),
 
                     Ubicacion.builder()
-                            .nombreUbicacion("FitZone Surco")
+                            .nombreUbicacion("SmartFit Surco")
                             .direccion("Av. Javier Prado Este 4200, Santiago de Surco - Lima, Lima - 15023")
                             .distrito("Surco")
                             .ciudad("Lima")
@@ -147,7 +147,11 @@ public class InitData implements CommandLineRunner {
     private void inicializarUsuarioPrueba() {
         if (repositorioUsuario.count() == 0) {
             Usuario usuarioPrueba = Usuario.builder()
-                    .nombreCompleto("Alexander Ferrua")
+                    .nombres("Alexander")
+                    .apellidoPaterno("Ferrua")
+                    .apellidoMaterno("Rúa")
+                    .dni("12345678")
+                    .direccion("Lima - Perú")
                     .correoElectronico("alexferruarua564@gmail.com")
                     .contrasena(codificadorContrasena.encode("123456"))
                     .numeroTelefono("+51902487635")
@@ -158,5 +162,6 @@ public class InitData implements CommandLineRunner {
             repositorioUsuario.save(usuarioPrueba);
         }
     }
+
 }
 

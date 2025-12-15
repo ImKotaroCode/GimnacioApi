@@ -102,7 +102,6 @@ public class ClaseService {
             return Map.of("success", false, "mensaje", "El usuario no estaba inscrito en esta clase");
         }
 
-        // Quitar relación en ambos lados
         usuario.getClasesInscritas().remove(clase);
         clase.getUsuariosInscritos().remove(usuario);
 

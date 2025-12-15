@@ -85,7 +85,6 @@ public class MembresiaService {
 
         repositorioMembresia.save(m);
 
-        // sincronizar con la entidad usuario (por si la guardas ahí también)
         usuario.setMembresia(m);
         repositorioUsuario.save(usuario);
     }

@@ -9,10 +9,10 @@
         <version>3.2.0</version>
     </parent>
 
-    <groupId>com.fitzone</groupId>
-    <artifactId>fitzone-api</artifactId>
+    <groupId>SmartFit</groupId>
+    <artifactId>SmartFit-Api</artifactId>
     <version>1.0.0</version>
-    <name>FitZone API</name>
+    <name>SmartFit</name>
 
     <properties>
         <java.version>17</java.version>
