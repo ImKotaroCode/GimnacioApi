@@ -66,10 +66,14 @@ public class ConfigSecurity {
     public CorsConfigurationSource fuenteConfiguracionCors() {
         CorsConfiguration cfg = new CorsConfiguration();
 
-        cfg.setAllowedOriginPatterns(List.of("*"));
+        cfg.setAllowedOrigins(List.of(
+                "http://localhost:8000",
+                "http://localhost:3000",
+                "https://sistema-gimnacio.vercel.app"
+        ));
 
         cfg.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        cfg.setAllowedHeaders(List.of("*"));
+        cfg.setAllowedHeaders(List.of("Authorization", "Content-Type"));
         cfg.setExposedHeaders(List.of("Authorization"));
         cfg.setAllowCredentials(false);
         cfg.setMaxAge(3600L);
@@ -78,4 +82,5 @@ public class ConfigSecurity {
         fuente.registerCorsConfiguration("/**", cfg);
         return fuente;
     }
+
 }
