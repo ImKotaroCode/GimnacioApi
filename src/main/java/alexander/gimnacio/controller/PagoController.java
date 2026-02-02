@@ -89,8 +89,8 @@ public class PagoController {
 
             var params = new com.stripe.param.checkout.SessionCreateParams.Builder()
                     .setMode(com.stripe.param.checkout.SessionCreateParams.Mode.SUBSCRIPTION)
-                    .setSuccessUrl("http://127.0.0.1:3000/html/index.html?checkout=success")
-                    .setCancelUrl("http://127.0.0.1:3000/html/index.html?checkout=cancel")
+                    .setSuccessUrl("https://sistema-gimnacio.vercel.app/index.html?checkout=success")
+                    .setCancelUrl("https://sistema-gimnacio.vercel.app/index.html?checkout=cancel")
                     .addLineItem(
                             com.stripe.param.checkout.SessionCreateParams.LineItem.builder()
                                     .setPrice(priceId)
